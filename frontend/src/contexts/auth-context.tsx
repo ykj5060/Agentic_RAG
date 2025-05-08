@@ -1,7 +1,14 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import { useRouter } from "next/navigation";
+import { BACKEND_PUBLIC_URL } from "@/lib/api-utils";
 
 type User = {
   id: number;
@@ -30,7 +37,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch("/api/users/me");
+      const response = await fetch(`${BACKEND_PUBLIC_URL}/users/me`, {
+        credentials: "include",
+      });
 
       if (response.ok) {
         const userData = await response.json();

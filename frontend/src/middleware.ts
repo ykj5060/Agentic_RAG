@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-
 const protectedRoutes = ["/files", "/chat"];
 const publicRoutes = ["/login", "/signup"];
 
@@ -12,12 +11,28 @@ export default function middleware(request: NextRequest) {
   const token = request.cookies.get("auth_token");
 
   if (isProtectedRoute && !token) {
-    return NextResponse.redirect(new URL("/login", request.url))
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   if (isPublicRoute && token) {
-    return NextResponse.redirect(new URL("/chat", request.url))
+    return NextResponse.redirect(new URL("/chat", request.url));
   }
 
-  return NextResponse.next()
+  if (path.startsWith("/xapi")) {
+    // Create a new request with the Authorization header if we have a token
+    if (token) {
+      const headers = new Headers(request.headers);
+      headers.set("Authorization", `Bearer ${token.value}`);
+      console.log("headers", headers);
+
+      // Return a new response with the added header
+      return NextResponse.next({
+        request: {
+          headers,
+        },
+      });
+    }
+  }
+
+  return NextResponse.next();
 }
