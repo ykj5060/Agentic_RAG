@@ -357,7 +357,7 @@ async def create_chunks_from_blocks(
     blocks: List[DocumentBlock],
     mode: Literal[
         "page", "block"
-    ] = "page",  # HOMEWORK: Extend this to support other chunking strategies
+    ] = "page",  # TODO: Extend this to support other chunking strategies
     max_concurrency: int = 10,
 ) -> List[DocumentChunk]:
     """
